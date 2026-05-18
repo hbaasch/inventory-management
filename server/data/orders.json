@@ -6180,5 +6180,25 @@
     "expected_delivery": "2025-11-19T12:30:00",
     "total_value": 9125.0,
     "actual_delivery": "2025-11-18T12:30:00"
+  },
+  {
+    "id": "251",
+    "order_number": "RST-2026-0251",
+    "customer": "Internal Restocking",
+    "items": [
+      {
+        "sku": "WDG-001",
+        "name": "Industrial Widget Type A",
+        "quantity": 400,
+        "unit_price": 15.0
+      }
+    ],
+    "status": "Submitted",
+    "warehouse": null,
+    "category": null,
+    "order_date": "2026-05-18T11:29:17.332223",
+    "expected_delivery": "2026-06-01T11:29:17.332223",
+    "total_value": 6000.0,
+    "actual_delivery": null
   }
 ]
