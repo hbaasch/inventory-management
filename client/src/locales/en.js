@@ -6,6 +6,7 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restocking: 'Restocking',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
   },
@@ -112,6 +113,10 @@ export default {
     onTimeDelivery: 'On-Time Delivery',
     itemsCount: '{count} items',
     quantity: 'Qty',
+    submittedOrders: 'Submitted Restocking Orders',
+    submittedDate: 'Submitted Date',
+    leadTime: 'Lead Time',
+    leadTimeDays: '~14 business days',
     table: {
       orderNumber: 'Order Number',
       orderId: 'Order ID',
@@ -164,6 +169,29 @@ export default {
       vendor: 'Vendor',
       date: 'Date',
       amount: 'Amount'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: 'Restocking',
+    description: 'Allocate your budget to restock items based on demand forecasts',
+    availableBudget: 'Available Budget',
+    allocated: 'Allocated',
+    remaining: 'Remaining',
+    recommendations: 'Recommendations',
+    placeOrder: 'Place Order',
+    orderPlaced: 'Order Placed',
+    noItems: 'No items can be allocated within the current budget',
+    submittingOrder: 'Submitting...',
+    table: {
+      itemName: 'Item Name',
+      sku: 'SKU',
+      trend: 'Trend',
+      forecastedQty: 'Forecasted Qty',
+      unitCost: 'Unit Cost',
+      allocatedQty: 'Allocated Qty',
+      lineTotal: 'Line Total'
     }
   },
 

@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from pydantic import BaseModel
 from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders
+import json
+import os
+from datetime import datetime, timedelta
 
 app = FastAPI(title="Factory Inventory Management System")
 
@@ -89,6 +92,7 @@ class DemandForecast(BaseModel):
     forecasted_demand: int
     trend: str
     period: str
+    unit_cost: float
 
 class BacklogItem(BaseModel):
     id: str
@@ -119,6 +123,16 @@ class CreatePurchaseOrderRequest(BaseModel):
     unit_cost: float
     expected_delivery_date: str
     notes: Optional[str] = None
+
+class RestockingOrderItem(BaseModel):
+    sku: str
+    name: str
+    quantity: int
+    unit_price: float
+
+class CreateRestockingOrderRequest(BaseModel):
+    items: List[RestockingOrderItem]
+    total_value: float
 
 # API endpoints
 @app.get("/")
@@ -303,6 +317,39 @@ def get_monthly_trends():
     result = list(months.values())
     result.sort(key=lambda x: x['month'])
     return result
+
+@app.post("/api/restocking-orders")
+async def create_restocking_order(request: CreateRestockingOrderRequest):
+    """Create a restocking order from budget-allocated demand forecast items"""
+    new_id = str(max((int(o['id']) for o in orders), default=0) + 1)
+    now = datetime.now()
+    order_number = f"RST-{now.year}-{new_id.zfill(4)}"
+
+    new_order = {
+        "id": new_id,
+        "order_number": order_number,
+        "customer": "Internal Restocking",
+        "items": [
+            {"sku": item.sku, "name": item.name, "quantity": item.quantity, "unit_price": item.unit_price}
+            for item in request.items
+        ],
+        "status": "Submitted",
+        "warehouse": None,
+        "category": None,
+        "order_date": now.isoformat(),
+        "expected_delivery": (now + timedelta(days=14)).isoformat(),
+        "total_value": request.total_value,
+        "actual_delivery": None
+    }
+
+    orders.append(new_order)
+
+    # Persist to orders.json so the submitted order survives a server restart
+    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    with open(os.path.join(data_dir, 'orders.json'), 'w') as f:
+        json.dump(orders, f, indent=2)
+
+    return {"success": True, "order": new_order}
 
 if __name__ == "__main__":
     import uvicorn
